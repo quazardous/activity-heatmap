@@ -69,22 +69,22 @@ Monthly profile.
       d.value = +d.value;
     });
 
-    const map = new ActivityHeatmap(data, '#my-heatmap', 'yearly');
+    const map = new ActivityHeatmap(data, 'yearly', '#my-heatmap');
     map.render();
   });
 ```
 
 ## Options
 
-The second arg can be an extensive options object.
+The second arg is a profile hint that will tweak options. You can override the tweaked options after instantiation.
 
-The third arg is a profile hint that will tweak options. So you can override options after instantiation.
+The third arg can be an extensive options object.
 
 ```js
 const options = {
   selector: '#my-heatmap'
 };
-const map = new ActivityHeatmap(data, options, 'yearly');
+const map = new ActivityHeatmap(data, 'yearly', options);
 map.options.period.from = new Date('2020-01-01');
 ```
 
@@ -107,6 +107,17 @@ const options = {
 };
 ```
 
+## Inline render()
+
+`render()` can be use without arguments or you can pass your own `SVG` object.
+
+```js
+...
+const heatmap = map.render(mySvg, 100, 50);
+...
+```
+
+It returns a SVG group with the whole heatmap.
 
 ## Example
 

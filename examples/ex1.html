@@ -25,7 +25,7 @@
 <body>
 
     <div>
-        Yearly.
+        Yearly with basic invocation.
         <div id="yearly"></div>
         <script type="text/javascript">
           d3.json("yearly.json").then(function(data) {
@@ -37,7 +37,7 @@
               d.value = +d.value;
             });
         
-            const map = new ActivityHeatmap(data, '#yearly', 'yearly');
+            const map = new ActivityHeatmap(data, 'yearly', '#yearly');
             // tweak options
             map.options.period.from = new Date('2019-05-03');
             map.render();
@@ -46,7 +46,7 @@
     </div>
 
     <div>
-        Monthly.
+        Monthly inside a given SVG.
         <div id="monthly"></div>
         <script>
     
@@ -59,13 +59,22 @@
                 d.value = +d.value;
               });
     
-              const map = new ActivityHeatmap(data, '#monthly', 'monthly');
+              const map = new ActivityHeatmap(data, 'monthly');
               // tweak options
               map.options.debug = true;
               // big numbers ?
               map.options.geometry.histogram.legend.label.width = 30;
               map.options.period.from = new Date('2020-04-03');
-              map.render();
+              
+              // you can pass your own svg object to render() and translate the heatmap to fit your needs
+              const mySvg = d3.select('#monthly')
+                  .style('position', 'relative')
+                  .append('svg')
+                  .attr('class', 'my-complex-chart')
+                  .attr('width', 1000)
+                  .attr('height', 500);
+              
+              map.render(mySvg, 100, 50);
             });
           
         </script>

@@ -1,24 +1,29 @@
 /* Activity Heatmap d3js v5 */
 class ActivityHeatmap {
     
-  constructor (data, options = {}, profile = 'yearly') {
+  constructor (data, profile = 'yearly', options = {}) {
     this.data = data;
     this.profile = profile;
     this.__options(options);
   }
 
-  render() {
+  render(svg = null, left = 0, top = 0) {
     this.init();
 
-    let svg = this.svg();
+    if (svg == null) svg = this.svg();
     
-    if (this.options.frame) this.renderFrame(svg);
-    if (this.options.debug) this.renderBlueprints(svg);
-    this.renderHeatmap(svg);
-    if (this.options.histogram) this.renderHistogram(svg);
+    let chart = svg.append('g');
+    if (left != 0 || top != 0) chart.attr("transform", `translate(${left}, ${top})`);
+    
+    if (this.options.frame) this.renderFrame(chart);
+    if (this.options.debug) this.renderBlueprints(chart);
+    this.renderHeatmap(chart);
+    if (this.options.histogram) this.renderHistogram(chart);
+    
+    return chart;
   }
   
-  renderHeatmap(svg) {
+  renderHeatmap(chart) {
     let w = this.geometry.heatmap.box.width;
     let h = this.geometry.heatmap.box.height;
     let l = this.geometry.heatmap.box.left;
@@ -30,7 +35,7 @@ class ActivityHeatmap {
       .range(this.options.colors.scale)
       .domain(this.heatmap.scale);
     
-    let heatmap = svg.append('g')
+    let heatmap = chart.append('g')
       .attr('class', 'heatmap');
   
     let cells = heatmap.selectAll('.cell')
@@ -62,15 +67,15 @@ class ActivityHeatmap {
     
     if (this.options.legend) {
       this.renderLegend(
-          svg,
+          chart,
           this.heatmap.scale,
           this.geometry.heatmap.legend);
     }
-    if (this.options.labels.cols) this.renderColsLabels(svg);
-    if (this.options.labels.rows) this.renderRowsLabels(svg);
+    if (this.options.labels.cols) this.renderColsLabels(chart);
+    if (this.options.labels.rows) this.renderRowsLabels(chart);
   }
 
-  renderHistogram(svg) {
+  renderHistogram(chart) {
     let w = this.geometry.histogram.box.width;
     let h = this.geometry.histogram.box.height;
     let l = this.geometry.histogram.box.left;
@@ -81,7 +86,7 @@ class ActivityHeatmap {
       .range(this.options.colors.scale)
       .domain(this.histogram.scale);
     
-    let histogram = svg.append('g')
+    let histogram = chart.append('g')
       .attr('class', 'histogram');
   
     let bars = histogram.selectAll('.bar')
@@ -114,14 +119,14 @@ class ActivityHeatmap {
     
     if (this.options.legend) {
       this.renderLegend(
-          svg,
+          chart,
           this.histogram.scale,
           this.geometry.histogram.legend);
     }
   }
 
   
-  renderLegend(svg, scale, geometry) {
+  renderLegend(chart, scale, geometry) {
     let w = geometry.box.width;
     let h = geometry.box.height;
     let l = geometry.box.left;
@@ -131,7 +136,7 @@ class ActivityHeatmap {
       .domain(scale);
     
     let colorScale = this.linearRange(scale[1], scale[0], h);
-    let legend = svg.append('g');
+    let legend = chart.append('g');
     legend
       .attr('class', 'legend');
     
@@ -161,13 +166,13 @@ class ActivityHeatmap {
 
   }
   
-  renderColsLabels(svg) {
+  renderColsLabels(chart) {
     let w = this.geometry.labels.cols.box.width;
     let h = this.geometry.labels.cols.box.height;
     let l = this.geometry.labels.cols.box.left;
     let t = this.geometry.labels.cols.box.top;
     
-    let colsLabels = svg.append('g');
+    let colsLabels = chart.append('g');
     colsLabels
       .attr('class', 'cols-labels');
     
@@ -205,13 +210,13 @@ class ActivityHeatmap {
     
   }
   
-  renderRowsLabels (svg) {
+  renderRowsLabels (chart) {
     let w = this.geometry.labels.rows.box.width;
     let l = this.geometry.labels.rows.box.left;
     let t = this.geometry.labels.rows.box.top;
     let h = this.geometry.labels.rows.box.height;
     
-    let rowsLabels = svg.append('g');
+    let rowsLabels = chart.append('g');
     rowsLabels
       .attr('class', 'rows-labels');
     
@@ -244,8 +249,8 @@ class ActivityHeatmap {
       .text(d => d.label);
   }
   
-  renderFrame (svg) {
-    svg.append('rect')
+  renderFrame (chart) {
+    chart.append('rect')
       .style("stroke", this.options.colors.frame)
       .style("fill-opacity", "0.0")
       .style("stroke-width", "1")
@@ -255,8 +260,8 @@ class ActivityHeatmap {
       .attr('y', 0);
   }
   
-  renderBlueprints (svg) {
-    let blueprints = svg.append('g')
+  renderBlueprints (chart) {
+    let blueprints = chart.append('g')
       .attr('class', 'blueprints')
       .style("stroke", "blue")
       .style("stroke-opacity", "0.5")
@@ -561,7 +566,7 @@ class ActivityHeatmap {
 
   }
   
-  __options (options, profile) {
+  __options (options) {
     if (typeof options === 'string' || options instanceof String) {
       options = {selector: options};
     }
@@ -573,6 +578,7 @@ class ActivityHeatmap {
         histogram: true,
         frame: true,
         geometry: {
+          // auto by default
           width: null,
           height: null,
           heatmap: {
@@ -620,6 +626,7 @@ class ActivityHeatmap {
           margin: 10,
         },
         period: {
+          // auto by default, see profile below
           from: null,
           to: null,
           range: null,
@@ -628,15 +635,16 @@ class ActivityHeatmap {
             col: null,
           }
         },
+        // auto by default
         scale: [null, null],
         colors: {
           separator: '#AAAAAA',
           frame: '#AAAAAA',
           scale: ['#D8E6E7', '#218380'],
         },
+        // column / row vs data index manipulation
         struct: item => ({
           /*
-          //see profile
           i: ...,
           ci: ...
           col: ...,
