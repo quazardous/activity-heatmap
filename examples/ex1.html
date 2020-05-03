@@ -29,7 +29,7 @@
         <div id="yearly"></div>
         <script type="text/javascript">
           d3.json("yearly.json").then(function(data) {
-            // do your AJAX stuff hear
+            // do your AJAX stuff here
             data.forEach(function(d) {
               // final data items should have at least a JS Date date...
               d.date = new Date(d.timestamp);
@@ -51,7 +51,7 @@
         <script>
     
             d3.json("monthly.json").then(function(data) {
-              // do your AJAX stuff hear
+              // do your AJAX stuff here
               data.forEach(function(d) {
                 // final data items should have at least a JS Date date...
                 d.date = new Date(d.timestamp);

@@ -61,7 +61,7 @@ Monthly profile.
 
 ```js
   d3.json("url/to/my-data.json").then(function(data) {
-    // do your AJAX stuff hear
+    // do your AJAX stuff here
     data.forEach(function(d) {
       // final data items should have at least a JS Date date...
       d.date = new Date(d.timestamp);
