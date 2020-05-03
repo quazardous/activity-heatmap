@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>D3.js Activity Heatmap ex 1</title>
+<style>
+.heatmap-tooltip {
+	position: absolute;
+	z-index: 9999;
+	padding: 5px 9px;
+	color: #bbbbbb;
+	font-size: 12px;
+	background: rgba(0, 0, 0, 0.85);
+	border-radius: 3px;
+	text-align: center;
+}
+</style>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"
+    charset="utf-8"></script>
+<script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+<script src="../src/activity-heatmap.js"></script>
+</head>
+
+<body>
+
+    <div>
+        Yearly.
+        <div id="yearly"></div>
+        <script type="text/javascript">
+          d3.json("yearly.json").then(function(data) {
+            // do your AJAX stuff hear
+            data.forEach(function(d) {
+              // final data items should have at least a JS Date date...
+              d.date = new Date(d.timestamp);
+              // ...and a Number value.
+              d.value = +d.value;
+            });
+        
+            const map = new ActivityHeatmap(data, '#yearly', 'yearly');
+            // tweak options
+            map.options.period.from = new Date('2019-05-03');
+            map.render();
+          });
+        </script>
+    </div>
+
+    <div>
+        Monthly.
+        <div id="monthly"></div>
+        <script>
+    
+            d3.json("monthly.json").then(function(data) {
+              // do your AJAX stuff hear
+              data.forEach(function(d) {
+                // final data items should have at least a JS Date date...
+                d.date = new Date(d.timestamp);
+                // ...and a Number value.
+                d.value = +d.value;
+              });
+    
+              const map = new ActivityHeatmap(data, '#monthly', 'monthly');
+              // tweak options
+              map.options.debug = true;
+              // big numbers ?
+              map.options.geometry.histogram.legend.label.width = 30;
+              map.options.period.from = new Date('2020-04-03');
+              map.render();
+            });
+          
+        </script>
+    </div>
+
+</body>
+
+</html>
