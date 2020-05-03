@@ -1,0 +1,24 @@
+{
+	"name" : "quazardous/activity-heatmap",
+	"description" : "A d3 heatmap for representing time series data",
+	"type" : "component",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "David Berlioz",
+			"email" : "berliozdavid@gmail.com"
+		}
+	],
+	"require": {
+        "robloach/component-installer": "*"
+    },
+    "extra": {
+        "component": {
+            "scripts": [
+                "src/activity-heatmap.js"
+            ],
+            "files": [
+                "dist/activity-heatmap.min.js"
+            ]
+        }
+    }
+}

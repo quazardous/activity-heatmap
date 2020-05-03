@@ -1,4 +1,4 @@
-
+/* Activity Heatmap d3js v5 */
 class ActivityHeatmap {
     
   constructor (data, options = {}, profile = 'yearly') {

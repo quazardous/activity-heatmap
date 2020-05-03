@@ -37,7 +37,7 @@ Monthly profile.
 1. Add `d3.js` and `moment.js`
 
 2. Include `activity-heatmap.js`
-`<script src="path/to/activity-heatmap.js"></script>`
+`<script src="path/to/activity-heatmap.js"></script>` or `<script src="path/to/activity-heatmap.min.js"></script>`
 
 3. Add style stuff for tooltips
 
