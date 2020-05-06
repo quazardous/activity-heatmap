@@ -319,12 +319,12 @@ class ActivityHeatmap {
   }
   
   svg () {
-    d3.select(this.options.selector).selectAll('svg.calendar-heatmap').remove(); // remove the existing chart, if it exists
+    d3.select(this.options.selector).selectAll('svg.activity-heatmap').remove(); // remove the existing chart, if it exists
     
     let svg = d3.select(this.options.selector)
       .style('position', 'relative')
       .append('svg')
-      .attr('class', 'container-heatmap')
+      .attr('class', 'activity-heatmap')
       .attr('width', this.geometry.width)
       .attr('height', this.geometry.height);
     
