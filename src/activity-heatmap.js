@@ -721,7 +721,7 @@ class ActivityHeatmap {
       
     }
     
-    options = mergeDeep(defaults, options);
+    options = ActivityHeatmap.mergeDeep(defaults, options);
     
     this.options = options;
   }
@@ -796,28 +796,29 @@ class ActivityHeatmap {
     
     return data;
   }
+  
+  static mergeDeep (...objects) {
+    const isObject = obj => obj && typeof obj === 'object';
+    
+    return objects.reduce((prev, obj) => {
+      Object.keys(obj).forEach(key => {
+        const pVal = prev[key];
+        const oVal = obj[key];
+        
+        if (Array.isArray(pVal) && Array.isArray(oVal)) {
+          //Array is replaced
+          prev[key] = oVal;
+        }
+        else if (isObject(pVal) && isObject(oVal)) {
+          prev[key] = ActivityHeatmap.mergeDeep(pVal, oVal);
+        }
+        else {
+          prev[key] = oVal;
+        }
+      });
+      
+      return prev;
+    }, {});
+  }
 }
 
-function mergeDeep (...objects) {
-  const isObject = obj => obj && typeof obj === 'object';
-  
-  return objects.reduce((prev, obj) => {
-    Object.keys(obj).forEach(key => {
-      const pVal = prev[key];
-      const oVal = obj[key];
-      
-      if (Array.isArray(pVal) && Array.isArray(oVal)) {
-        //prev[key] = pVal.concat(...oVal);
-        prev[key] = oVal;
-      }
-      else if (isObject(pVal) && isObject(oVal)) {
-        prev[key] = mergeDeep(pVal, oVal);
-      }
-      else {
-        prev[key] = oVal;
-      }
-    });
-    
-    return prev;
-  }, {});
-}
